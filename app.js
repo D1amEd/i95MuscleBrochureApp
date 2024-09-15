@@ -1,5 +1,17 @@
 const axios=require('axios');
 const cheerio= require('cheerio');
+const express= require('express');
+
+
+const app = express();
+
+app.use(express.urlencoded({ extended: true })); // Replaces bodyParser.urlencoded
+
+
+
+// Set EJS as the template engine
+app.set('view engine', 'Ejs');
+app.use('/imgs', express.static('imgs'));
 
 async function retrieveInfo(url) {
     try{
@@ -41,6 +53,8 @@ async function retrieveInfo(url) {
          const warranty = $('dd.warranty_value').text();
          const stock = $('dd.stock_value').text();
 
+        const watchvideo = $('#watch_video').attr('href');
+
         const obj={
             title: h1Tags[0],
             mainImageSrc,
@@ -57,7 +71,9 @@ async function retrieveInfo(url) {
             warranty,
             stock
         }
-        console.log(obj)
+        if(watchvideo){
+            obj.watchvideo=watchvideo
+        }
         return obj;
     }
     catch (error) {
@@ -66,11 +82,39 @@ async function retrieveInfo(url) {
     }
 }
 
+
+
+// Main Page to accept URL input
+app.get('/', (req, res) => {
+    res.render('main'); // Renders the form page for URL input
+});
+
+
+// Handle form submission and scrape vehicle data
+app.post('/scrape', async (req, res) => {
+    const url = req.body.url; // Get the URL from the form submission
+    const vehicleData = await retrieveInfo(url); // Fetch vehicle data
+
+    // If scraping succeeds, render the index page with the vehicle data
+    if (vehicleData) {
+        const qrCodeLink = generateQRCodeLink(url, 500);
+        if (vehicleData.watchvideo) {
+            vehicleData.watchvideo = generateQRCodeLink(vehicleData.watchvideo, 500);
+        }
+        vehicleData.qrCodeLink = qrCodeLink;
+        res.render('index', { vehicle: vehicleData });
+    } else {
+        res.send('Failed to retrieve vehicle data.');
+    }
+});
+
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
 const generateQRCodeLink = (text, size) => {
-    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(text)}&size=${size}x${size}`;
+    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(text)}&size=${"800"}x${"800"}`;
     return apiUrl;
   };
-
-  console.log(generateQRCodeLink('https://i95muscle.com/1959-chevrolet-bel-air-sport-coupe-348-hope-mills-nc-28348/7337313', 200));
-
-retrieveInfo('https://i95muscle.com/1959-chevrolet-bel-air-sport-coupe-348-hope-mills-nc-28348/7337313');

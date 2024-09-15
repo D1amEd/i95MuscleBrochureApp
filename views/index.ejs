@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= vehicle.title %></title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: white;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .price {
+        font-size: 32px; /* Adjusted font size for Our Price */
+        font-weight: bold;
+        color: #990000; /* Ensure dark red color */
+        margin-bottom: 10px;
+        text-align: center; /* Center the price text */
+      }
+
+      .retail-value {
+        font-size: 24px; /* Adjusted font size for Retail Value */
+        font-weight: normal; /* Ensure normal font weight for retail */
+        color: black; /* Retail value in black */
+        margin-bottom: 20px;
+        text-align: center; /* Center the retail value text */
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .header .contact-info {
+        font-size: 12px;
+        text-align: left;
+      }
+
+      .header .contact-info p {
+        margin: 5px 0;
+      }
+
+      .header img {
+        max-width: 200px;
+      }
+
+      .title {
+        border: 2px solid black;
+        padding: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .image {
+        flex: 1;
+        margin-right: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .image img {
+        max-width: 100%;
+        display: block;
+        margin-bottom: 10px; /* Space between the image and QR code */
+      }
+
+      .qr-code-container {
+        text-align: center;
+        margin-top: 2px;
+      }
+
+      .qr-code-container img {
+        width: 130px;
+        height: auto;
+      }
+
+      .details {
+        flex: 1;
+      }
+
+      .specifications {
+        margin-top: 20px;
+      }
+
+      .specifications h2 {
+        margin-bottom: 10px;
+      }
+
+      .specifications table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .specifications td {
+        padding: 5px 0;
+      }
+
+      .specifications td:first-child {
+        font-weight: bold;
+        width: 40%;
+      }
+
+      .description {
+        margin-top: 10px;
+      }
+
+      .description h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .description p {
+        font-size: 15px;
+        text-align: justify;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="contact-info">
+          <p>I95muscle.com</p>
+          <p>(910) 429-0195</p>
+          <p>4115 Legion Rd.</p>
+          <p>Hope Mills, NC 28348</p>
+        </div>
+        <img src="/imgs/logo.png" alt="I-95 Muscle" />
+      </div>
+
+      <div class="title"><%= vehicle.title %></div>
+
+      <div class="content">
+        <div class="image">
+          <img src="<%= vehicle.mainImageSrc %>" alt="<%= vehicle.title %>" />
+          
+          <div class="qr-code-container" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+            <div class="qr-code-item" style="text-align: center;">
+              <p>Check our website:</p>
+              <img src="<%= vehicle.qrCodeLink %>" alt="QR Code" />
+            </div>
+            
+            <% if (vehicle.watchvideo) { %>
+              <div class="qr-code-item" style="text-align: center;">
+                <p>Watch Video:</p>
+                <img src="<%= vehicle.watchvideo %>" alt="Watch Video QR Code" />
+              </div>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="details">
+          <div class="price" style="text-align: center">
+            <span
+              style="
+                font-family: Arial, sans-serif;
+                font-size: 24px;
+                color: black;
+                font-weight: normal;
+              "
+              >Our Price</span
+            >
+            <span
+              style="
+                font-family: 'Times New Roman', serif;
+                font-size: 36px;
+                color: hwb(0 0% 51%);
+              "
+            >
+              <%= vehicle.ourPrice.toLocaleString() %></span
+            >
+          </div>
+          <div class="retail-value">
+            <span
+              style="
+                font-family: Arial, sans-serif;
+                font-size: 18px;
+                color: black;
+                font-weight: normal;
+              "
+              >Retail Value</span
+            >
+            <span
+              style="
+                font-family: 'Times New Roman', serif;
+                font-size: 22px;
+                font-weight: bold;
+                text-decoration: line-through;
+              "
+            >
+              <%= vehicle.retailValue.toLocaleString() %></span
+            >
+          </div>
+      
+          <div class="specifications">
+            <h2>Specifications:</h2>
+            <table>
+              <tr>
+                <td>Exterior:</td>
+                <td><%= vehicle.exterior %></td>
+              </tr>
+              <tr>
+                <td>Interior:</td>
+                <td><%= vehicle.interior %></td>
+              </tr>
+              <tr>
+                <td>Engine:</td>
+                <td><%= vehicle.engine %></td>
+              </tr>
+              <tr>
+                <td>Transmission:</td>
+                <td><%= vehicle.transmission %></td>
+              </tr>
+              <tr>
+                <td>Drivetrain:</td>
+                <td><%= vehicle.drivetrain %></td>
+              </tr>
+              <tr>
+                <td>Mileage:</td>
+                <td><%= vehicle.mileage.toLocaleString() %></td>
+              </tr>
+              <tr>
+                <td>VIN:</td>
+                <td><%= vehicle.vin %></td>
+              </tr>
+              <tr>
+                <td>Warranty:</td>
+                <td><%= vehicle.warranty %></td>
+              </tr>
+              <tr>
+                <td>Stock:</td>
+                <td><%= vehicle.stock %></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+
+      <div class="description">
+        <p><%= vehicle.description %></p>
+      </div>
+    </div>
+  </body>
+</html>
